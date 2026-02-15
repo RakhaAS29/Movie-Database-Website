@@ -474,44 +474,45 @@
                     `;
         }
 
-        // ========================================
-        // HANDLE FAVORITE FORM AJAX
-        // ========================================
-        document.addEventListener('submit', function (e) {
-            if (e.target.classList.contains('favorite-form')) {
-                e.preventDefault();
-
-                const form = e.target;
-                const formData = new FormData(form);
-
-                fetch(form.action, {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        const btn = form.querySelector('.favorite-btn');
-                        if (data.added) {
-                            btn.classList.add('active');
-                            btn.textContent = '❤️';
-                        } else {
-                            btn.classList.remove('active');
-                            btn.textContent = '🤍';
-                        }
-
-                        // Update favorites count in tab
-                        const favTab = document.querySelector('.tabs a[href="{{ route('favorites.index') }}"]');
-                        if (favTab && data.favoritesCount !== undefined) {
-                            favTab.innerHTML = favTab.innerHTML.replace(/\(\d+\)/, `(${data.favoritesCount})`);
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
+// ========================================
+// HANDLE FAVORITE FORM AJAX
+// ========================================
+document.addEventListener('submit', function (e) {
+    if (e.target.classList.contains('favorite-form')) {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+        
+        // Force HTTPS untuk production
+        const url = form.action.replace('http://', 'https://');
+        
+        fetch(url, { 
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
             }
-        });
+        })
+            .then(response => response.json())
+            .then(data => {
+                const btn = form.querySelector('.favorite-btn');
+                if (data.added) {
+                    btn.classList.add('active');
+                    btn.textContent = '❤️';
+                } else {
+                    btn.classList.remove('active');
+                    btn.textContent = '🤍';
+                }
+
+                const favTab = document.querySelector('.tabs a[href="{{ route('favorites.index') }}"]');
+                if (favTab && data.favoritesCount !== undefined) {
+                    favTab.innerHTML = favTab.innerHTML.replace(/\(\d+\)/, `(${data.favoritesCount})`);
+                }
+            })
+            .catch(error => console.error('Error:', error));
+    }
+});
 
         // ========================================
         // INITIALIZE ON PAGE LOAD
