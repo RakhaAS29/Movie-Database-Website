@@ -4,15 +4,13 @@
 
 @section('extra-css')
     <style>
-        /* Override header title color */
         .header h1 {
             color: #ffffff !important;
         }
 
-        /* Movie Detail - Dark Theme */
+        /* Movie Detail */
         .movie-detail {
             background: #1a1a1a;
-            /* Black background */
             border-radius: 15px;
             overflow: hidden;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
@@ -38,7 +36,6 @@
 
         .detail-info h2 {
             color: #ffffff;
-            /* White text */
             font-size: 32px;
             margin-bottom: 15px;
         }
@@ -52,9 +49,7 @@
 
         .meta-item {
             background: #2a2a2a;
-            /* Dark gray background */
             color: #ffffff;
-            /* White text */
             padding: 8px 15px;
             border-radius: 20px;
             font-size: 14px;
@@ -63,7 +58,6 @@
         .detail-plot {
             line-height: 1.6;
             color: #e0e0e0;
-            /* Light gray text */
             margin-bottom: 20px;
             font-size: 16px;
         }
@@ -77,7 +71,6 @@
 
         .spec-item {
             background: #2a2a2a;
-            /* Dark gray background */
             padding: 15px;
             border-radius: 8px;
         }
@@ -85,14 +78,12 @@
         .spec-label {
             font-weight: bold;
             color: #ff9800;
-            /* Orange */
             margin-bottom: 5px;
             font-size: 14px;
         }
 
         .spec-value {
             color: #e0e0e0;
-            /* Light gray text */
             font-size: 14px;
         }
 
@@ -141,7 +132,6 @@
     </div>
 
     <div class="container">
-        <!-- Back Button -->
         <div class="back-button">
             <a href="{{ route('movies.index') }}" class="btn btn-secondary">
                 ← {{ __('messages.back_to_list') }}

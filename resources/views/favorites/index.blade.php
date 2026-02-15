@@ -4,7 +4,6 @@
 
 @section('extra-css')
     <style>
-        /* Override header title color */
         .header h1 {
             color: #ffffff !important;
         }
@@ -25,7 +24,6 @@
             font-size: 16px;
             font-weight: 600;
             color: #ffffff;
-            /* ← PUTIH */
             position: relative;
             transition: color 0.3s;
             text-decoration: none;
@@ -33,7 +31,6 @@
 
         .tab.active {
             color: #ff9800;
-            /* ← ORANGE */
         }
 
         .tab.active::after {
@@ -44,7 +41,6 @@
             right: 0;
             height: 2px;
             background: #ff9800;
-            /* ← ORANGE */
         }
 
         /* Movie Grid */
@@ -302,59 +298,59 @@
             lazyImages.forEach(img => imageObserver.observe(img));
         }
 
-// ========================================
-// HANDLE FAVORITE FORM AJAX (Remove)
-// ========================================
-document.addEventListener('submit', function (e) {
-    if (e.target.classList.contains('favorite-form')) {
-        e.preventDefault();
-        const form = e.target;
-        const formData = new FormData(form);
-        const movieCard = form.closest('.movie-card');
-        const movieId = movieCard.dataset.movieId;
-        
-        // Add fade out animation
-        movieCard.style.transition = 'opacity 0.3s, transform 0.3s';
-        movieCard.style.opacity = '0';
-        movieCard.style.transform = 'scale(0.9)';
-        
-        // Force HTTPS untuk production
-        const url = form.action.replace('http://', 'https://');
-        
-        fetch(url, {  // ← UBAH INI
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                // Remove card after animation
-                setTimeout(() => {
-                    movieCard.remove();
-                    // Update favorites count in tab
-                    const currentCount = parseInt(document.querySelector('.tab.active').textContent.match(/\d+/)[0]);
-                    const newCount = currentCount - 1;
-                    document.querySelector('.tab.active').innerHTML =
-                        document.querySelector('.tab.active').innerHTML.replace(/\(\d+\)/, `(${newCount})`);
-                    // Show empty state if no more favorites
-                    const movieGrid = document.getElementById('movieGrid');
-                    if (movieGrid && movieGrid.children.length === 0) {
-                        location.reload(); // Reload to show empty state
+        // ========================================
+        // HANDLE FAVORITE FORM AJAX (Remove)
+        // ========================================
+        document.addEventListener('submit', function (e) {
+            if (e.target.classList.contains('favorite-form')) {
+                e.preventDefault();
+                const form = e.target;
+                const formData = new FormData(form);
+                const movieCard = form.closest('.movie-card');
+                const movieId = movieCard.dataset.movieId;
+
+                // Add fade out animation
+                movieCard.style.transition = 'opacity 0.3s, transform 0.3s';
+                movieCard.style.opacity = '0';
+                movieCard.style.transform = 'scale(0.9)';
+
+                // Force HTTPS untuk production
+                const url = form.action.replace('http://', 'https://');
+
+                fetch(url, { 
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
                     }
-                }, 300);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Revert animation on error
-                movieCard.style.opacity = '1';
-                movieCard.style.transform = 'scale(1)';
-                alert('Failed to remove from favorites. Please try again.');
-            });
-    }
-});
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        // Remove card after animation
+                        setTimeout(() => {
+                            movieCard.remove();
+                            // Update favorites count in tab
+                            const currentCount = parseInt(document.querySelector('.tab.active').textContent.match(/\d+/)[0]);
+                            const newCount = currentCount - 1;
+                            document.querySelector('.tab.active').innerHTML =
+                                document.querySelector('.tab.active').innerHTML.replace(/\(\d+\)/, `(${newCount})`);
+                            // Show empty state if no more favorites
+                            const movieGrid = document.getElementById('movieGrid');
+                            if (movieGrid && movieGrid.children.length === 0) {
+                                location.reload(); // Reload to show empty state
+                            }
+                        }, 300);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        // Revert animation on error
+                        movieCard.style.opacity = '1';
+                        movieCard.style.transform = 'scale(1)';
+                        alert('Failed to remove from favorites. Please try again.');
+                    });
+            }
+        });
         // ========================================
         // INITIALIZE ON PAGE LOAD
         // ========================================

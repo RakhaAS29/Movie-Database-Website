@@ -4,7 +4,6 @@
 
 @section('extra-css')
     <style>
-        /* Override header title color */
         .header h1 {
             color: #ffffff !important;
         }
@@ -301,7 +300,7 @@
                             </button>
                         </form>
 
-                        <!-- Movie Poster (Lazy Load) -->
+                        <!-- Movie Poster -->
                         <a href="{{ route('movies.show', $movie['imdbID']) }}">
                             <img class="movie-poster"
                                 data-src="{{ $movie['Poster'] != 'N/A' ? $movie['Poster'] : 'https://via.placeholder.com/300x450?text=No+Poster' }}"
@@ -319,7 +318,7 @@
                 @endforeach
             </div>
 
-            <!-- Infinite Scroll Trigger (invisible element) -->
+            <!-- Infinite Scroll Trigger -->
             <div id="infiniteScrollTrigger"></div>
 
             <!-- Loading Indicator -->
@@ -354,7 +353,7 @@
                     }
                 });
             }, {
-                rootMargin: '50px' // Load images 50px before they enter viewport
+                rootMargin: '50px' 
             });
 
             lazyImages.forEach(img => imageObserver.observe(img));
@@ -378,7 +377,7 @@
                     }
                 });
             }, {
-                rootMargin: '200px' // Trigger 200px before reaching the trigger element
+                rootMargin: '200px' 
             });
 
             scrollObserver.observe(trigger);

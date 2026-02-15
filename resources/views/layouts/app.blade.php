@@ -137,7 +137,6 @@
 
         .form-group {
             margin-bottom: 25px;
-            /* Tambah spacing (dari 20px jadi 25px) */
         }
 
         .form-group label {
@@ -163,13 +162,12 @@
             border-color: #ff9800;
         }
 
-        /* Sign In Button - Tambah margin */
+        /* Sign In Button*/
         .login-box .btn-primary {
             margin-bottom: 25px;
-            /* Spacing sebelum lang buttons */
         }
 
-        /* Language Switch di Login - Sama kayak header */
+        /* Language Switch di Login */
         .login-box .lang-switch {
             display: flex;
             gap: 5px;
