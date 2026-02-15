@@ -26,7 +26,7 @@ class AuthController extends Controller
         ]);
 
         // Hardcoded credentials
-        if ($request->username === 'aldmic' && $request->password === '123abc123') {
+        if ($request->username === 'admin' && $request->password === 'admin123') {
             session(['logged_in' => true]);
             return redirect()->route('movies.index');
         }
