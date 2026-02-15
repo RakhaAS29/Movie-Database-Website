@@ -399,6 +399,9 @@
             if (searchType) url += '&type=' + searchType;
             if (searchYear) url += '&y=' + searchYear;
 
+            // Force HTTPS untuk production
+            url = url.replace('http://', 'https://');
+
             // Fetch more movies
             fetch(url, {
                 headers: {
@@ -448,71 +451,71 @@
             const activeClass = isFavorite ? 'active' : '';
 
             return `
-                        <div class="movie-card">
-                            <form method="POST" action="{{ route('favorites.store') }}" class="favorite-form">
-                                @csrf
-                                <input type="hidden" name="imdb_id" value="${movie.imdbID}">
-                                <input type="hidden" name="title" value="${movie.Title}">
-                                <input type="hidden" name="year" value="${movie.Year}">
-                                <input type="hidden" name="poster" value="${movie.Poster}">
-                                <button type="submit" class="favorite-btn ${activeClass}">
-                                    ${heartIcon}
-                                </button>
-                            </form>
-                            <a href="/movies/${movie.imdbID}">
-                                <img class="movie-poster" 
-                                     data-src="${poster}"
-                                     alt="${movie.Title}">
-                            </a>
-                            <a href="/movies/${movie.imdbID}" style="text-decoration: none;">
-                                <div class="movie-info">
-                                    <div class="movie-title">${movie.Title}</div>
-                                    <div class="movie-year">${movie.Year}</div>
-                                </div>
-                            </a>
-                        </div>
-                    `;
+                            <div class="movie-card">
+                                <form method="POST" action="{{ route('favorites.store') }}" class="favorite-form">
+                                    @csrf
+                                    <input type="hidden" name="imdb_id" value="${movie.imdbID}">
+                                    <input type="hidden" name="title" value="${movie.Title}">
+                                    <input type="hidden" name="year" value="${movie.Year}">
+                                    <input type="hidden" name="poster" value="${movie.Poster}">
+                                    <button type="submit" class="favorite-btn ${activeClass}">
+                                        ${heartIcon}
+                                    </button>
+                                </form>
+                                <a href="/movies/${movie.imdbID}">
+                                    <img class="movie-poster" 
+                                         data-src="${poster}"
+                                         alt="${movie.Title}">
+                                </a>
+                                <a href="/movies/${movie.imdbID}" style="text-decoration: none;">
+                                    <div class="movie-info">
+                                        <div class="movie-title">${movie.Title}</div>
+                                        <div class="movie-year">${movie.Year}</div>
+                                    </div>
+                                </a>
+                            </div>
+                        `;
         }
 
-// ========================================
-// HANDLE FAVORITE FORM AJAX
-// ========================================
-document.addEventListener('submit', function (e) {
-    if (e.target.classList.contains('favorite-form')) {
-        e.preventDefault();
-        const form = e.target;
-        const formData = new FormData(form);
-        
-        // Force HTTPS untuk production
-        const url = form.action.replace('http://', 'https://');
-        
-        fetch(url, { 
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            }
-        })
-            .then(response => response.json())
-            .then(data => {
-                const btn = form.querySelector('.favorite-btn');
-                if (data.added) {
-                    btn.classList.add('active');
-                    btn.textContent = '❤️';
-                } else {
-                    btn.classList.remove('active');
-                    btn.textContent = '🤍';
-                }
+        // ========================================
+        // HANDLE FAVORITE FORM AJAX
+        // ========================================
+        document.addEventListener('submit', function (e) {
+            if (e.target.classList.contains('favorite-form')) {
+                e.preventDefault();
+                const form = e.target;
+                const formData = new FormData(form);
 
-                const favTab = document.querySelector('.tabs a[href="{{ route('favorites.index') }}"]');
-                if (favTab && data.favoritesCount !== undefined) {
-                    favTab.innerHTML = favTab.innerHTML.replace(/\(\d+\)/, `(${data.favoritesCount})`);
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-});
+                // Force HTTPS untuk production
+                const url = form.action.replace('http://', 'https://');
+
+                fetch(url, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const btn = form.querySelector('.favorite-btn');
+                        if (data.added) {
+                            btn.classList.add('active');
+                            btn.textContent = '❤️';
+                        } else {
+                            btn.classList.remove('active');
+                            btn.textContent = '🤍';
+                        }
+
+                        const favTab = document.querySelector('.tabs a[href="{{ route('favorites.index') }}"]');
+                        if (favTab && data.favoritesCount !== undefined) {
+                            favTab.innerHTML = favTab.innerHTML.replace(/\(\d+\)/, `(${data.favoritesCount})`);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
 
         // ========================================
         // INITIALIZE ON PAGE LOAD
