@@ -252,7 +252,7 @@ php artisan serve
 Open browser: `http://localhost:8000`
 
 **Login Credentials:**
-- Username: `aldmic`
+- Username: `admin`
 - Password: `123abc123`
 
 ---
